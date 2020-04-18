@@ -21,6 +21,9 @@ class RequestTransformer
         $request->request->replace($data);
     }
 
+    /**
+     * @return mixed
+     */
     public static function getRequiredField(Request $request, string $fieldName, bool $isArray = false)
     {
         $requestData = \json_decode($request->getContent(), true);
