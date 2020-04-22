@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class PutUserTest extends UserTestBase
 {
-
     public function testPutUserWithAdmin(): void
     {
         $payload = [
@@ -17,8 +16,8 @@ class PutUserTest extends UserTestBase
             'password' => 'password2',
             'roles' => [
                 Role::ROLE_ADMIN,
-                Role::ROLE_USER
-            ]
+                Role::ROLE_USER,
+            ],
         ];
 
         self::$admin->request('PUT', \sprintf('%s/%s.%s', $this->endpoint, self::IDS['user_id'], self::FORMAT), [], [], [], \json_encode($payload));
@@ -30,9 +29,8 @@ class PutUserTest extends UserTestBase
         $this->assertEquals(self::IDS['user_id'], $responseData['id']);
         $this->assertEquals($payload['name'], $responseData['name']);
         $this->assertEquals($payload['roles'], $responseData['roles']);
-
     }
-    
+
     public function testPutAdminWithUser(): void
     {
         $payload = [
@@ -40,8 +38,8 @@ class PutUserTest extends UserTestBase
             'password' => 'password2',
             'roles' => [
                 Role::ROLE_ADMIN,
-                Role::ROLE_USER
-            ]
+                Role::ROLE_USER,
+            ],
         ];
 
         self::$user->request('PUT', \sprintf('%s/%s.%s', $this->endpoint, self::IDS['admin_id'], self::FORMAT), [], [], [], \json_encode($payload));
@@ -59,8 +57,8 @@ class PutUserTest extends UserTestBase
             'password' => 'password2',
             'roles' => [
                 Role::ROLE_ADMIN,
-                'ROLE_FAKE'
-            ]
+                'ROLE_FAKE',
+            ],
         ];
 
         self::$admin->request('PUT', \sprintf('%s/%s.%s', $this->endpoint, self::IDS['user_id'], self::FORMAT), [], [], [], \json_encode($payload));
@@ -77,8 +75,8 @@ class PutUserTest extends UserTestBase
             'password' => 'password2',
             'roles' => [
                 Role::ROLE_ADMIN,
-                Role::ROLE_USER
-            ]
+                Role::ROLE_USER,
+            ],
         ];
 
         self::$user->request('PUT', \sprintf('%s/%s.%s', $this->endpoint, self::IDS['user_id'], self::FORMAT), [], [], [], \json_encode($payload));
@@ -87,5 +85,4 @@ class PutUserTest extends UserTestBase
 
         $this->assertEquals(JsonResponse::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
-
 }

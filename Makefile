@@ -20,6 +20,7 @@ migrations:
 
 code-style: ## Runs php-cs to fix code styling following Symfony rules
 	php-cs-fixer fix src --rules=@Symfony
+	php-cs-fixer fix tests --rules=@Symfony
 
 generate-ssh-keys: ## Generate ssh keys in the container
 	md config\jwt

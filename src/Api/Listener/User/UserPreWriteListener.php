@@ -42,7 +42,7 @@ class UserPreWriteListener implements PreWriteListener
 
             $user->setPassword(
                 $this->encoderService->generateEncodedPasswordForUser(
-                    $user, 
+                    $user,
                     RequestTransformer::getRequiredField($request, 'password')
                 )
             );

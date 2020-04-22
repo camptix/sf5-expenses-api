@@ -5,22 +5,22 @@ declare(strict_types=1);
 namespace App\Tests\Functional;
 
 use App\DataFixtures\AppFixtures;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\ToolsException;
-use Doctrine\ORM\EntityManagerInterface;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class TestBase extends WebTestCase 
+class TestBase extends WebTestCase
 {
     use FixturesTrait;
     protected const FORMAT = 'jsonld';
 
     protected const IDS = [
         'admin_id' => '74099578-74e0-4d3e-9e67-a2d666b4a001',
-        'user_id' => '74099578-74e0-4d3e-9e67-a2d666b4a002'
+        'user_id' => '74099578-74e0-4d3e-9e67-a2d666b4a002',
     ];
 
     protected static ?KernelBrowser $client = null;
@@ -28,8 +28,8 @@ class TestBase extends WebTestCase
     protected static ?KernelBrowser $user = null;
 
     /**
-    * @throws ToolsException
-    */
+     * @throws ToolsException
+     */
     public function setUp()
     {
         $this->resetDatabase();
@@ -47,10 +47,9 @@ class TestBase extends WebTestCase
             self::$user = clone self::$client;
             $this->createAuthenticatedUser(self::$user, 'user@api.com', 'password');
         }
-
-
     }
-    // & este parámetro sirve para que se trate el valor por referencia, si o editamos, al finalizar el método tendrá 
+
+    // & este parámetro sirve para que se trate el valor por referencia, si o editamos, al finalizar el método tendrá
     // el valor calculado en el método.
     private function createAuthenticatedUser(KernelBrowser &$client, string $username, string $password): void
     {
@@ -59,7 +58,7 @@ class TestBase extends WebTestCase
             '/api/v1/login_check',
             [
                 '_email' => $username,
-                '_password' => $password
+                '_password' => $password,
             ]
         );
 
@@ -67,8 +66,7 @@ class TestBase extends WebTestCase
 
         $client->setServerParameters([
             'HTTP_Authorization' => \sprintf('Bearer %s', $data['token']),
-            'CONTENT_TYPE' => 'application/json'
-
+            'CONTENT_TYPE' => 'application/json',
         ]);
     }
 
@@ -78,8 +76,8 @@ class TestBase extends WebTestCase
     }
 
     /**
-    * @throws ToolsException
-    */
+     * @throws ToolsException
+     */
     private function resetDatabase(): void
     {
         /** @var EntityManagerInterface $em */
@@ -92,7 +90,7 @@ class TestBase extends WebTestCase
         $schemaTool = new SchemaTool($em);
         $schemaTool->dropDatabase();
 
-        if(!empty($metatada)) {
+        if (!empty($metatada)) {
             $schemaTool->createSchema($metadata);
         }
 

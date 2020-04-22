@@ -9,7 +9,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class EncoderService
 {
-
     private EncoderFactoryInterface $encoderFactory;
 
     public function __construct(EncoderFactoryInterface $encoderFactory)

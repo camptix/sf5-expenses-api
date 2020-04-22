@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class GetUserTest extends UserTestBase
 {
-
     public function testGetUsersForAdmin(): void
     {
         self::$admin->request('GET', \sprintf('%s.%s', $this->endpoint, self::FORMAT));
@@ -49,5 +48,4 @@ class GetUserTest extends UserTestBase
 
         $this->assertEquals(JsonResponse::HTTP_FORBIDDEN, $response->getStatusCode());
     }
-
 }
