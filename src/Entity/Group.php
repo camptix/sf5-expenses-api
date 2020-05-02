@@ -33,6 +33,7 @@ class Group
         $this->owner = $owner;
         $this->createdAt = new \DateTime();
         $this->users = new ArrayCollection();
+        $this->markAsUpdated();
     }
 
     /**
@@ -105,5 +106,10 @@ class Group
         $this->users->add($user);
 
         $user->addGroup($this);
+    }
+
+    public function isOwnerBy(User $user)
+    {
+        return $this->getOwner()->getId() === $user->getId();
     }
 }

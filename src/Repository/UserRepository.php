@@ -10,7 +10,6 @@ class UserRepository extends BaseRepository
 {
     protected static function entityClass(): string
     {
-        //TODO: Implement entityClass() method
         return User::class;
     }
 

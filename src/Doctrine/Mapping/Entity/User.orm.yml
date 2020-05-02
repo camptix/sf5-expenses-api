@@ -6,7 +6,7 @@ App\Entity\User:
     id:
       type: string
 
-  manyToMan:
+  manyToMany:
     groups:
       targetEntity: Group
       inversedBy: users

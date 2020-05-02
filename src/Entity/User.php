@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Security\Role;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -26,7 +27,7 @@ class User implements UserInterface
     protected \DateTime $updatedAt;
 
     /** @var Collection|Group[] */
-    protected Collection $groups;
+    protected ?Collection $groups = null;
 
     /**
      * @throws \Exception
@@ -38,6 +39,7 @@ class User implements UserInterface
         $this->email = $email;
         $this->roles[] = Role::ROLE_USER;
         $this->createdAt = new \DateTime();
+        $this->groups = new ArrayCollection();
         $this->markAsUpdated();
     }
 
@@ -171,6 +173,6 @@ class User implements UserInterface
 
     public function addGroup(Group $group): void
     {
-        $this->group->add($group);
+        $this->groups->add($group);
     }
 }
