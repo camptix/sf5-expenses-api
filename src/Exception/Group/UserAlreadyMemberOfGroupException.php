@@ -8,7 +8,7 @@ use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 
 class UserAlreadyMemberOfGroupException extends ConflictHttpException
 {
-    private const MESSAGE = 'User with ID %s does not exist';
+    private const MESSAGE = 'User with ID %s is already member of the group';
 
     public static function fromUserId(string $id): self
     {
