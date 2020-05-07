@@ -6,12 +6,14 @@ namespace App\Api\Action\Group;
 
 use App\Api\Action\RequestTransformer;
 use App\Entity\User;
+use App\Exception\Group\CannotAddUsersToGroupException;
+use App\Exception\Group\GroupDoesNotExistException;
+use App\Exception\Group\UserAlreadyMemberOfGroupException;
+use App\Exception\Group\UserDoesNotExistException;
 use App\Repository\GroupRepository;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class AddUser
@@ -27,8 +29,6 @@ class AddUser
 
     /**
      * @Route("/groups/add_user", methods={"POST"})
-     *
-     * @return JsonResponse
      */
     public function __invoke(Request $request, User $user): JsonResponse
     {
@@ -38,23 +38,21 @@ class AddUser
         $groupId = RequestTransformer::getRequiredField($request, 'group_id');
         $userId = RequestTransformer::getRequiredField($request, 'user_id');
 
-        $group = $this->groupRepository->findOneById($groupId);
-        if (null === $group) {
-            throw new BadRequestHttpException('Group not found');
+        if (null === $group = $this->groupRepository->findOneById($groupId)) {
+            throw GroupDoesNotExistException::fromGroupId($groupId);
         }
 
         if (!$this->groupRepository->userIsMember($group, $user)) {
-            throw new BadRequestHttpException('You cannot add users to this group');
+            throw CannotAddUsersToGroupException::create();
         }
 
-        $newUser = $this->userRepository->findOneById($userId);
-        if (null === $newUser) {
-            throw new BadRequestHttpException('User not found');
+        if (null === $newUser = $this->userRepository->findOneById($userId)) {
+            throw UserDoesNotExistException::fromUserId($userId);
         }
 
         //Si el usuario ya existe en este grupo lanzamos una excepcion
         if ($this->groupRepository->userIsMember($group, $newUser)) {
-            throw new ConflictHttpException('This user is already member of this group');
+            throw UserAlreadyMemberOfGroupException::fromUserId($userId);
         }
 
         $group->addUser($newUser);

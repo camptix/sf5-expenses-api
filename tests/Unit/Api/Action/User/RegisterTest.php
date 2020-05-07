@@ -7,22 +7,16 @@ namespace App\Tests\Unit\Api\Action\User;
 use App\Api\Action\User\Register;
 use App\Entity\User;
 use App\Exception\User\UserAlreadyExistException;
-use App\Repository\UserRepository;
 use App\Service\Password\EncoderService;
+use App\Tests\Unit\Api\Action\TestBase;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
-use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-class RegisterTest extends TestCase
+class RegisterTest extends TestBase
 {
-    /** @var ObjectProphecy|UserRepository */
-    private $userRespositoryProphecy;
-
-    private UserRepository $userRepository;
-
     /** @var ObjectProphecy|JWTTokenManagerInterface */
     private $JWTTokenManagerProphecy;
 
@@ -37,8 +31,7 @@ class RegisterTest extends TestCase
 
     public function setUp(): void
     {
-        $this->userRespositoryProphecy = $this->prophesize(UserRepository::class);
-        $this->userRepository = $this->userRespositoryProphecy->reveal();
+        parent::setUp();
 
         $this->JWTTokenManagerProphecy = $this->prophesize(JWTTokenManagerInterface::class);
         $this->JWTTokenManager = $this->JWTTokenManagerProphecy->reveal();
@@ -62,7 +55,7 @@ class RegisterTest extends TestCase
 
         $request = new Request([], [], [], [], [], [], \json_encode($payload));
 
-        $this->userRespositoryProphecy->findOneByEmail($payload['email'])->willReturn(null);
+        $this->userRepositoryProphecy->findOneByEmail($payload['email'])->willReturn(null);
 
         $this->encoderServiceProphecy->generateEncodedPasswordForUser(
             Argument::that(
@@ -73,7 +66,7 @@ class RegisterTest extends TestCase
             Argument::type('string')
         )->shouldBeCalledOnce();
 
-        $this->userRespositoryProphecy->save(
+        $this->userRepositoryProphecy->save(
             Argument::that(function (User $user): bool {
                 return true;
             })
@@ -105,7 +98,7 @@ class RegisterTest extends TestCase
 
         $user = new User($payload['name'], $payload['email']);
 
-        $this->userRespositoryProphecy->findOneByEmail($payload['email'])->willReturn($user);
+        $this->userRepositoryProphecy->findOneByEmail($payload['email'])->willReturn($user);
 
         $this->expectException(UserAlreadyExistException::class);
 
