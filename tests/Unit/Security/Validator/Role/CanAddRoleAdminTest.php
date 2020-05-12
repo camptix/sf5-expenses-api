@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Security\Validator\Role;
+namespace App\Tests\Unit\Security\Validator\Role;
 
 use App\Exception\Role\RequiredRoleToAddRoleAdminNotFoundException;
 use App\Security\Role;
