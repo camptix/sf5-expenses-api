@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Group;
 use App\Entity\User;
 use App\Security\Role;
 use App\Service\Password\EncoderService;
@@ -29,6 +30,13 @@ class AppFixtures extends Fixture
             $user->setRoles($userData['roles']);
 
             $manager->persist($user);
+
+            foreach ($userData['groups'] as $groupData) {
+                $group = new Group($groupData['name'], $user, $groupData['id']);
+                $group->addUser($user);
+
+                $manager->persist($group);
+            }
         }
 
         $manager->flush();
@@ -46,6 +54,12 @@ class AppFixtures extends Fixture
                     Role::ROLE_ADMIN,
                     Role::ROLE_USER,
                 ],
+                'groups' => [
+                    [
+                        'id' => '74099578-74e0-4d3e-9e67-a2d666b4a003',
+                        'name' => 'Admin\'s Group',
+                    ],
+                ],
             ],
             [
                 'id' => '74099578-74e0-4d3e-9e67-a2d666b4a002',
@@ -53,6 +67,12 @@ class AppFixtures extends Fixture
                 'email' => 'user@api.com',
                 'password' => 'password',
                 'roles' => [Role::ROLE_USER],
+                'groups' => [
+                    [
+                        'id' => '74099578-74e0-4d3e-9e67-a2d666b4a004',
+                        'name' => 'User\'s Group',
+                    ],
+                ],
             ],
         ];
     }

@@ -13,7 +13,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AddUser
 {
-
     private GroupService $groupService;
 
     public function __construct(GroupService $groupService)

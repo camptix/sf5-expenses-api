@@ -16,12 +16,12 @@ use App\Repository\UserRepository;
 
 class GroupService
 {
-
     private GroupRepository $groupRepository;
 
     private UserRepository $userRepository;
 
-    public function __construct(GroupRepository $groupRepository, UserRepository $userRepository){
+    public function __construct(GroupRepository $groupRepository, UserRepository $userRepository)
+    {
         $this->groupRepository = $groupRepository;
         $this->userRepository = $userRepository;
     }
@@ -34,7 +34,7 @@ class GroupService
 
         $userToAdd = $this->getUserFromId($userId);
 
-        if($this->groupRepository->userIsMember($group, $userToAdd)) {
+        if ($this->groupRepository->userIsMember($group, $userToAdd)) {
             throw UserAlreadyMemberOfGroupException::fromUserId($userId);
         }
 
@@ -51,7 +51,7 @@ class GroupService
 
         $userToRemove = $this->getUserFromId($userId);
 
-        if(!$this->groupRepository->userIsMember($group, $userToRemove)) {
+        if (!$this->groupRepository->userIsMember($group, $userToRemove)) {
             throw UserNotMemberOfGroupException::create();
         }
 
@@ -67,7 +67,6 @@ class GroupService
         }
 
         throw GroupDoesNotExistException::fromGroupId($groupId);
-
     }
 
     private function userCanManageGroup(User $user, Group $group): void
@@ -77,10 +76,10 @@ class GroupService
         }
     }
 
-    private function getUserFromId(String $userId): User
+    private function getUserFromId(string $userId): User
     {
         if (null !== $user = $this->userRepository->findOneById($userId)) {
-            return $user;               
+            return $user;
         }
 
         throw UserDoesNotExistException::fromUserId($userId);

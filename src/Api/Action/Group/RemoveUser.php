@@ -13,7 +13,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RemoveUser
 {
-
     private GroupService $groupService;
 
     public function __construct(GroupService $groupService)
@@ -26,7 +25,6 @@ class RemoveUser
      */
     public function __invoke(Request $request, User $user): JsonResponse
     {
-
         $this->groupService->removeUserToGroup(
             RequestTransformer::getRequiredField($request, 'group_id'),
             RequestTransformer::getRequiredField($request, 'user_id'),

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Exception\Group;
 
-use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class CannotAddAnotherOwnerException extends AccessDeniedException
 {

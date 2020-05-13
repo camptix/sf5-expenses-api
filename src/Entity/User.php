@@ -180,5 +180,4 @@ class User implements UserInterface
     {
         $this->groups->removeElement($group);
     }
-
 }
