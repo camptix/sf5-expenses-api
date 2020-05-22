@@ -4,6 +4,7 @@ namespace App\Doctrine\Extension;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+use App\Entity\Category;
 use App\Entity\Group;
 use App\Entity\User;
 use App\Repository\GroupRepository;
@@ -45,10 +46,36 @@ class DoctrineUserExtension implements QueryCollectionExtensionInterface
             $qb->andWhere(\sprintf('%s.%s = :currentUser', $rootAlias, $this->getResources()[$resourceClass]));
             $qb->setParameter(':currentUser', $user);
         }
+
+        if (Category::class === $resourceClass) {
+            $parameterId = '';
+            if (null !== $qb->getParameters()[0]) {
+                $parameterId = $qb->getParameters()[0]->getValue();
+            }
+
+            if ($this->isGroupAndUserIsMember($parameterId, $user)) {
+                $qb->andWhere(\sprintf('%s.group = : parameterId', $rootAlias));
+                $qb->setParameter('parameterId', $parameterId);
+            } else {
+                $qb->andWhere(\sprintf('%s.%s = :currentUser', $rootAlias, $this->getResources()[$resourceClass]));
+                $qb->andWhere(\sprintf('%s.group IS NULL', $rootAlias));
+                $qb->setParameter(':currentUser', $user);
+            }
+        }
     }
 
     private function getResources(): array
     {
-        return [Group::class => 'owner'];
+        return [Group::class => 'owner',
+            Category::class => 'user', ];
+    }
+
+    private function isGroupAndUserIsMember(string $parameterId, User $user): bool
+    {
+        if (null !== $group = $this->groupRepository->findOneById($parameterId)) {
+            return $this->groupRepository->userIsMember($group, $user);
+        }
+
+        return false;
     }
 }

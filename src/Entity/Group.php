@@ -126,8 +126,8 @@ class Group
 
     /**
      * @return Collection|Category[]
-     */ 
-    public function getCategories()
+     */
+    public function getCategories(): Collection
     {
         return $this->categories;
     }

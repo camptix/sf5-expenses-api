@@ -187,8 +187,8 @@ class User implements UserInterface
 
     /**
      * @return Collection|Category[]
-     */ 
-    public function getCategories()
+     */
+    public function getCategories(): Collection
     {
         return $this->categories;
     }

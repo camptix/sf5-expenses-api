@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Ramsey\Uuid\Uuid;
+
 class Category
 {
     private string $id;
@@ -17,29 +19,41 @@ class Category
     private ?\DateTime $createdAt = null;
 
     private ?\DateTime $updatedAt = null;
-    
 
     /**
-     * Get the value of id
-     */ 
+     * @throws \Exception
+     */
+    public function __construct(string $name, User $user, Group $group = null, string $id = null)
+    {
+        $this->id = $id ?? Uuid::uuid4()->toString();
+        $this->name = $name;
+        $this->user = $user;
+        $this->group = $group;
+        $this->createdAt = new \DateTime();
+        $this->markAsUpdated();
+    }
+
+    /**
+     * Get the value of id.
+     */
     public function getId()
     {
         return $this->id;
     }
 
     /**
-     * Get the value of name
-     */ 
+     * Get the value of name.
+     */
     public function getName()
     {
         return $this->name;
     }
 
     /**
-     * Set the value of name
+     * Set the value of name.
      *
-     * @return  self
-     */ 
+     * @return self
+     */
     public function setName($name)
     {
         $this->name = $name;
@@ -48,32 +62,32 @@ class Category
     }
 
     /**
-     * Get the value of user
-     */ 
+     * Get the value of user.
+     */
     public function getUser()
     {
         return $this->user;
     }
 
     /**
-     * Get the value of group
-     */ 
+     * Get the value of group.
+     */
     public function getGroup()
     {
         return $this->group;
     }
 
     /**
-     * Get the value of createdAt
-     */ 
+     * Get the value of createdAt.
+     */
     public function getCreatedAt()
     {
         return $this->createdAt;
     }
 
     /**
-     * Get the value of updatedAt
-     */ 
+     * Get the value of updatedAt.
+     */
     public function getUpdatedAt()
     {
         return $this->updatedAt;
@@ -86,7 +100,7 @@ class Category
 
     public function isOwnedBy(User $user): bool
     {
-        if( null !== $this->getUser()){
+        if (null !== $this->getUser()) {
             return $this->getUser()->getId() === $user->getId();
         }
 

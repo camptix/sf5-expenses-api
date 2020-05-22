@@ -24,7 +24,7 @@ class UserVoter extends BaseVoter
     /**
      * @param User|null $subject
      */
-    protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token)
+    protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
         /** @var User $tokenUser */
         $tokenUser = $token->getUser();
